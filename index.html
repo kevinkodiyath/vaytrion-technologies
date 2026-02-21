@@ -1,1 +1,124 @@
-<!DOCTYPE html>\n<html lang="en">\n<head>\n    <meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n    <title>Coming Soon</title>\n    <link rel="stylesheet" href="style.css">\n    <script src="app.js" defer></script>\n    <style>\n        body {\n            margin: 0;\n            height: 100vh;\n            display: flex;\n            justify-content: center;\n            align-items: center;\n            background: radial-gradient(circle, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);\n        }\n        .container {\n            text-align: center;\n            color: white;\n            animation: fadeIn 1s;\n        }\n        @keyframes fadeIn {\n            from { opacity: 0; }\n            to { opacity: 1; }\n        }\n        .glow {\n            text-shadow: 0 0 20px rgba(0, 255, 255, 0.7);\n        }\n    </style>\n</head>\n<body>\n    <div class="container">\n        <h1 class="glow">Coming Soon!</h1>\n        <p>We are working hard to launch the website. Stay tuned!</p>\n    </div>\n    <script>\n        // Particle animation code can go here.\n    </script>\n</body>\n</html>\n
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vaytrion Technologies</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <section class="hero">
+
+    <!-- Background layer: glow, horizon, particles -->
+    <div class="background-layer">
+
+      <!-- Below-horizon fill: sits behind everything, masks the lower half -->
+      <svg class="horizon-fill-svg" viewBox="0 0 1440 1000" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,400 Q720,120 1440,400 L1440,1000 L0,1000 Z" fill="#0A0A0A" />
+      </svg>
+
+      <!-- Glow backdrop: between below-fill and horizon line -->
+      <div id="glow-backdrop"></div>
+
+      <canvas id="particles-canvas"></canvas>
+
+      <!-- Horizon SVG: glow arcs + horizon line (no below-fill) -->
+      <svg class="horizon-svg" viewBox="0 0 1440 1000" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <!-- Horizon line opacity: full at center, exponential taper, 0 at 1% from edges -->
+          <linearGradient id="horizon-fade" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"   stop-color="white" stop-opacity="0"/>
+            <stop offset="1%"   stop-color="white" stop-opacity="0"/>
+            <stop offset="20%"  stop-color="white" stop-opacity="0.2"/>
+            <stop offset="35%"  stop-color="white" stop-opacity="0.6"/>
+            <stop offset="50%"  stop-color="white" stop-opacity="1"/>
+            <stop offset="65%"  stop-color="white" stop-opacity="0.6"/>
+            <stop offset="80%"  stop-color="white" stop-opacity="0.2"/>
+            <stop offset="99%"  stop-color="white" stop-opacity="0"/>
+            <stop offset="100%" stop-color="white" stop-opacity="0"/>
+          </linearGradient>
+
+          <!-- Glow gradient: white, same exponential taper as horizon line -->
+          <linearGradient id="glow-gradient" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="0"/>
+            <stop offset="1%"   stop-color="#FFFFFF" stop-opacity="0"/>
+            <stop offset="20%"  stop-color="#FFFFFF" stop-opacity="0.2"/>
+            <stop offset="35%"  stop-color="#FFFFFF" stop-opacity="0.6"/>
+            <stop offset="50%"  stop-color="#FFFFFF" stop-opacity="1"/>
+            <stop offset="65%"  stop-color="#FFFFFF" stop-opacity="0.6"/>
+            <stop offset="80%"  stop-color="#FFFFFF" stop-opacity="0.2"/>
+            <stop offset="99%"  stop-color="#FFFFFF" stop-opacity="0"/>
+            <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+          </linearGradient>
+
+          <!-- Primary glow blur -->
+          <filter id="glow-blur" x="-50%" y="-100%" width="200%" height="300%">
+            <feGaussianBlur stdDeviation="20 25" />
+          </filter>
+
+          <!-- Atmospheric (soft, wide) glow blur -->
+          <filter id="glow-blur-soft" x="-50%" y="-150%" width="200%" height="400%">
+            <feGaussianBlur stdDeviation="30 40" />
+          </filter>
+
+        </defs>
+
+        <!-- Glow: symmetric, radiates equally above and below arc -->
+        <g opacity="0.2">
+          <path d="M0,400 Q720,120 1440,400"
+                stroke="url(#glow-gradient)" stroke-width="80"
+                fill="none" filter="url(#glow-blur-soft)" />
+        </g>
+        <g opacity="0.2">
+          <path d="M0,400 Q720,120 1440,400"
+                stroke="url(#glow-gradient)" stroke-width="40"
+                fill="none" filter="url(#glow-blur)" />
+        </g>
+
+        <!-- Horizon line: filled shape, tapers to 0px at edges, thickest at center -->
+        <path d="M0,400 Q720,120 1440,400 Q720,135 0,400 Z"
+              fill="url(#horizon-fade)" />
+      </svg>
+    </div>
+
+    <!-- Content layer -->
+    <div class="content-layer">
+
+      <!-- Header -->
+      <h1 class="header">
+        <span class="header-line">Security That Thinks.</span>
+        <span class="header-line">Not louder.</span>
+        <span class="header-line">Not reactive.</span>
+        <span class="header-line">Not ordinary.</span>
+      </h1>
+
+      <!-- Sub Header -->
+      <p class="subheader">
+        Built for teams that want clarity where others settle for noise.
+      </p>
+
+      <!-- Call to Action -->
+      <div class="cta">
+        <input
+          type="email"
+          class="cta-input"
+          placeholder="Your email address"
+          aria-label="Email address"
+        >
+        <button class="cta-button" type="button">Get Notified</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Scripts -->
+  <script src="main.js" defer></script>
+</body>
+</html>
