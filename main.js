@@ -47,6 +47,8 @@
           input.value = '';
         } else {
           console.error('API error:', data.error || 'Unknown error');
+          btn.textContent = 'Try again';
+          btn.disabled = false;
           throw new Error(data.error || 'Submission failed');
         }
 
@@ -60,7 +62,7 @@
 
   function initParticles() {
     const canvas = document.getElementById('particles-canvas');
-    if (!canvas) return;
+    if (!canvas) return () => {};
 
     const ctx = canvas.getContext('2d');
     let particles = [];
