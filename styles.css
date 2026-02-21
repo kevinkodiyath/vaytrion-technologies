@@ -405,3 +405,22 @@ html.no-js #glow-backdrop {
    =========================== */
 
 /* All sizing uses clamp() for fluid scaling — no additional breakpoints needed. */
+/* ===========================
+   FIX: Ensure CTA is clickable
+   =========================== */
+
+/* Force all background layers to ignore clicks */
+.background-layer,
+#glow-backdrop,
+#particles-canvas,
+.horizon-svg,
+.horizon-fill-svg {
+  pointer-events: none !important;
+}
+
+/* Ensure content layer is always above and interactive */
+.content-layer {
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+}
