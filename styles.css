@@ -1,11 +1,28 @@
-/* Updated styles.css to fix clamp() issue and consolidate .cta selector definitions */
-
-/* Fixing the clamp() issue on line 147 */
-padding: clamp(0.25rem, 0.5vw, 0.5rem);
-
-/* Consolidating .cta selector definitions */
 .cta {
-    opacity: 0.8;
-    filter: brightness(0.9);
-    transition: all 0.3s;
+  color: #ffffff;
+  font-size: 1rem;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: opacity 0.3s ease, filter 0.3s ease;
+  opacity: 1;
+  filter: brightness(100%);
+  /* other properties */
+}
+
+.cta:hover {
+  opacity: 0.8;
+  filter: brightness(90%);
+}
+
+.section {
+  background-color: #f0f0f0;
+}
+
+/* other styles */
+
+/* Fixing the clamp issue on line 147 */
+.some-class {
+  font-size: clamp(0.25rem, 0.5vw, 0.5rem);
 }
