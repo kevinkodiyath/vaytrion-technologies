@@ -6,7 +6,8 @@
   const API_URL = "https://script.google.com/macros/s/AKfycbzNfp7atfzwHhxM4kI0Hb4WqSXDBQtPUJeEi4bewzkPyG2GsNVV4Q08WiIjAEuOCRqu/exec";
 
   function isValidEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    // Enhanced email validation pattern
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.length <= 254;
   }
 
   function initCTA() {
@@ -33,16 +34,24 @@
           body: JSON.stringify({ email }),
         });
 
+        // Check if response is ok before parsing JSON
+        if (!res.ok) {
+          console.error('Server error:', res.status, res.statusText);
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+
         const data = await res.json();
 
         if (data.success) {
-          btn.textContent = 'You're in';
+          btn.textContent = 'You\'re in';
           input.value = '';
         } else {
-          throw new Error();
+          console.error('API error:', data.error || 'Unknown error');
+          throw new Error(data.error || 'Submission failed');
         }
 
       } catch (err) {
+        console.error('CTA Error:', err.message);
         btn.textContent = 'Try again';
         btn.disabled = false;
       }
@@ -55,6 +64,7 @@
 
     const ctx = canvas.getContext('2d');
     let particles = [];
+    let animationId = null;
 
     function resize() {
       canvas.width = window.innerWidth;
@@ -97,7 +107,20 @@
         ctx.fill();
       });
 
-      requestAnimationFrame(draw);
+      animationId = requestAnimationFrame(draw);
+    }
+
+    function stop() {
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+      }
+      window.removeEventListener('resize', handleResize);
+    }
+
+    function handleResize() {
+      resize();
+      createParticles();
     }
 
     resize();
@@ -105,12 +128,18 @@
     draw();
     
     // Fix: Add window resize listener to update canvas on window resize
-    window.addEventListener('resize', resize);
+    window.addEventListener('resize', handleResize);
+
+    // Return cleanup function to prevent memory leaks
+    return stop;
   }
 
   function boot() {
-    initParticles();
+    const stopParticles = initParticles();
     initCTA();
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', stopParticles);
   }
 
   if (document.readyState === 'loading') {
