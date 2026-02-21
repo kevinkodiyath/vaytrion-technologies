@@ -1,8 +1,6 @@
 (function () {
   'use strict';
 
-  console.log("Vaytrion JS Loaded v3");
-
   document.documentElement.classList.remove('no-js');
 
   const API_URL = "https://script.google.com/macros/s/AKfycbzNfp7atfzwHhxM4kI0Hb4WqSXDBQtPUJeEi4bewzkPyG2GsNVV4Q08WiIjAEuOCRqu/exec";
@@ -15,10 +13,7 @@
     const btn = document.querySelector('.cta-button');
     const input = document.querySelector('.cta-input');
 
-    if (!btn || !input) {
-      console.log("CTA not found");
-      return;
-    }
+    if (!btn || !input) return;
 
     btn.addEventListener('click', async function () {
       const email = input.value.trim();
@@ -48,44 +43,10 @@
         }
 
       } catch (err) {
-        console.error(err);
         btn.textContent = 'Try again';
         btn.disabled = false;
       }
     });
-  }
-
-  function runAnimations() {
-    const lines = document.querySelectorAll('.header-line');
-    const sub = document.querySelector('.subheader');
-    const cta = document.querySelector('.cta');
-
-    lines.forEach((line, i) => {
-      line.style.opacity = '0';
-      line.style.transform = 'translateY(10px)';
-
-      setTimeout(() => {
-        line.style.transition = 'all 0.5s ease';
-        line.style.opacity = '1';
-        line.style.transform = 'translateY(0)';
-      }, i * 150);
-    });
-
-    if (sub) {
-      sub.style.opacity = '0';
-      setTimeout(() => {
-        sub.style.transition = 'opacity 0.6s ease';
-        sub.style.opacity = '1';
-      }, 700);
-    }
-
-    if (cta) {
-      cta.style.opacity = '0';
-      setTimeout(() => {
-        cta.style.transition = 'opacity 0.6s ease';
-        cta.style.opacity = '1';
-      }, 1000);
-    }
   }
 
   function initParticles() {
@@ -135,18 +96,11 @@
     resize();
     createParticles();
     draw();
-
-    window.addEventListener('resize', () => {
-      resize();
-      createParticles();
-    });
   }
 
   function boot() {
-    console.log("Boot running...");
     initParticles();
     initCTA();
-    setTimeout(runAnimations, 300);
   }
 
   if (document.readyState === 'loading') {
@@ -156,3 +110,4 @@
   }
 
 })();
+
