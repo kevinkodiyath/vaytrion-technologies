@@ -36,7 +36,7 @@
         const data = await res.json();
 
         if (data.success) {
-          btn.textContent = 'You’re in';
+          btn.textContent = 'You're in';
           input.value = '';
         } else {
           throw new Error();
@@ -82,8 +82,15 @@
         p.x += p.dx;
         p.y += p.dy;
 
-        if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+        // Fix: Clamp position before reversing direction to prevent particles getting stuck
+        if (p.x < 0 || p.x > canvas.width) {
+          p.x = Math.max(0, Math.min(p.x, canvas.width));
+          p.dx *= -1;
+        }
+        if (p.y < 0 || p.y > canvas.height) {
+          p.y = Math.max(0, Math.min(p.y, canvas.height));
+          p.dy *= -1;
+        }
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
@@ -96,6 +103,9 @@
     resize();
     createParticles();
     draw();
+    
+    // Fix: Add window resize listener to update canvas on window resize
+    window.addEventListener('resize', resize);
   }
 
   function boot() {
@@ -110,4 +120,3 @@
   }
 
 })();
-
