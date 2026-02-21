@@ -1,124 +1,162 @@
-<!DOCTYPE html>
-<html lang="en" class="no-js">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vaytrion Technologies</title>
+(function () {
+  // Remove no-js fallback
+  document.documentElement.classList.remove('no-js');
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  // ==============================
+  // CONFIG
+  // ==============================
+  const API_URL = "https://script.google.com/macros/s/AKfycbzNfp7atfzwHhxM4kI0Hb4WqSXDBQtPUJeEi4bewzkPyG2GsNVV4Q08WiIjAEuOCRqu/exec";
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <section class="hero">
+  // ==============================
+  // EMAIL VALIDATION
+  // ==============================
+  function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
 
-    <!-- Background layer: glow, horizon, particles -->
-    <div class="background-layer">
+  // ==============================
+  // CTA HANDLER
+  // ==============================
+  const btn = document.querySelector('.cta-button');
+  const input = document.querySelector('.cta-input');
 
-      <!-- Below-horizon fill: sits behind everything, masks the lower half -->
-      <svg class="horizon-fill-svg" viewBox="0 0 1440 1000" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M0,400 Q720,120 1440,400 L1440,1000 L0,1000 Z" fill="#0A0A0A" />
-      </svg>
+  if (btn && input) {
+    btn.addEventListener('click', async function () {
+      const email = input.value.trim();
 
-      <!-- Glow backdrop: between below-fill and horizon line -->
-      <div id="glow-backdrop"></div>
+      if (!isValidEmail(email)) {
+        alert('Enter a valid email');
+        return;
+      }
 
-      <canvas id="particles-canvas"></canvas>
+      btn.textContent = 'Sending...';
+      btn.disabled = true;
 
-      <!-- Horizon SVG: glow arcs + horizon line (no below-fill) -->
-      <svg class="horizon-svg" viewBox="0 0 1440 1000" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <!-- Horizon line opacity: full at center, exponential taper, 0 at 1% from edges -->
-          <linearGradient id="horizon-fade" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%"   stop-color="white" stop-opacity="0"/>
-            <stop offset="1%"   stop-color="white" stop-opacity="0"/>
-            <stop offset="20%"  stop-color="white" stop-opacity="0.2"/>
-            <stop offset="35%"  stop-color="white" stop-opacity="0.6"/>
-            <stop offset="50%"  stop-color="white" stop-opacity="1"/>
-            <stop offset="65%"  stop-color="white" stop-opacity="0.6"/>
-            <stop offset="80%"  stop-color="white" stop-opacity="0.2"/>
-            <stop offset="99%"  stop-color="white" stop-opacity="0"/>
-            <stop offset="100%" stop-color="white" stop-opacity="0"/>
-          </linearGradient>
+      try {
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email }),
+        });
 
-          <!-- Glow gradient: white, same exponential taper as horizon line -->
-          <linearGradient id="glow-gradient" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="0"/>
-            <stop offset="1%"   stop-color="#FFFFFF" stop-opacity="0"/>
-            <stop offset="20%"  stop-color="#FFFFFF" stop-opacity="0.2"/>
-            <stop offset="35%"  stop-color="#FFFFFF" stop-opacity="0.6"/>
-            <stop offset="50%"  stop-color="#FFFFFF" stop-opacity="1"/>
-            <stop offset="65%"  stop-color="#FFFFFF" stop-opacity="0.6"/>
-            <stop offset="80%"  stop-color="#FFFFFF" stop-opacity="0.2"/>
-            <stop offset="99%"  stop-color="#FFFFFF" stop-opacity="0"/>
-            <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
-          </linearGradient>
+        const data = await res.json();
 
-          <!-- Primary glow blur -->
-          <filter id="glow-blur" x="-50%" y="-100%" width="200%" height="300%">
-            <feGaussianBlur stdDeviation="20 25" />
-          </filter>
+        if (data.success) {
+          btn.textContent = 'You’re in';
+          input.value = '';
+        } else {
+          throw new Error('Failed');
+        }
 
-          <!-- Atmospheric (soft, wide) glow blur -->
-          <filter id="glow-blur-soft" x="-50%" y="-150%" width="200%" height="400%">
-            <feGaussianBlur stdDeviation="30 40" />
-          </filter>
+      } catch (err) {
+        console.error('Error:', err);
+        btn.textContent = 'Try again';
+        btn.disabled = false;
+      }
+    });
+  }
 
-        </defs>
+  // ==============================
+  // SIMPLE TEXT ANIMATION
+  // ==============================
+  function runAnimations() {
+    const lines = document.querySelectorAll('.header-line');
+    const sub = document.querySelector('.subheader');
+    const cta = document.querySelector('.cta');
 
-        <!-- Glow: symmetric, radiates equally above and below arc -->
-        <g opacity="0.2">
-          <path d="M0,400 Q720,120 1440,400"
-                stroke="url(#glow-gradient)" stroke-width="80"
-                fill="none" filter="url(#glow-blur-soft)" />
-        </g>
-        <g opacity="0.2">
-          <path d="M0,400 Q720,120 1440,400"
-                stroke="url(#glow-gradient)" stroke-width="40"
-                fill="none" filter="url(#glow-blur)" />
-        </g>
+    lines.forEach((line, i) => {
+      line.style.opacity = '0';
+      line.style.transform = 'translateY(10px)';
 
-        <!-- Horizon line: filled shape, tapers to 0px at edges, thickest at center -->
-        <path d="M0,400 Q720,120 1440,400 Q720,135 0,400 Z"
-              fill="url(#horizon-fade)" />
-      </svg>
-    </div>
+      setTimeout(() => {
+        line.style.transition = 'all 0.5s ease';
+        line.style.opacity = '1';
+        line.style.transform = 'translateY(0)';
+      }, i * 150);
+    });
 
-    <!-- Content layer -->
-    <div class="content-layer">
+    if (sub) {
+      sub.style.opacity = '0';
+      setTimeout(() => {
+        sub.style.transition = 'opacity 0.6s ease';
+        sub.style.opacity = '1';
+      }, 700);
+    }
 
-      <!-- Header -->
-      <h1 class="header">
-        <span class="header-line">Security That Thinks.</span>
-        <span class="header-line">Not louder.</span>
-        <span class="header-line">Not reactive.</span>
-        <span class="header-line">Not ordinary.</span>
-      </h1>
+    if (cta) {
+      cta.style.opacity = '0';
+      setTimeout(() => {
+        cta.style.transition = 'opacity 0.6s ease';
+        cta.style.opacity = '1';
+      }, 1000);
+    }
+  }
 
-      <!-- Sub Header -->
-      <p class="subheader">
-        Built for teams that want clarity where others settle for noise.
-      </p>
+  // ==============================
+  // PARTICLES (LIGHT VERSION)
+  // ==============================
+  function initParticles() {
+    const canvas = document.getElementById('particles-canvas');
+    if (!canvas) return;
 
-      <!-- Call to Action -->
-      <div class="cta">
-        <input
-          type="email"
-          class="cta-input"
-          placeholder="Your email address"
-          aria-label="Email address"
-        >
-        <button class="cta-button" type="button">Get Notified</button>
-      </div>
+    const ctx = canvas.getContext('2d');
+    let particles = [];
 
-    </div>
-  </section>
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
 
-  <!-- Scripts -->
-  <script src="main.js" defer></script>
-</body>
-</html>
+    function createParticles() {
+      particles = [];
+      for (let i = 0; i < 60; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 2,
+          dx: (Math.random() - 0.5) * 0.2,
+          dy: (Math.random() - 0.5) * 0.2,
+        });
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'white';
+
+      particles.forEach(p => {
+        p.x += p.dx;
+        p.y += p.dy;
+
+        if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      requestAnimationFrame(draw);
+    }
+
+    resize();
+    createParticles();
+    draw();
+
+    window.addEventListener('resize', () => {
+      resize();
+      createParticles();
+    });
+  }
+
+  // ==============================
+  // INIT
+  // ==============================
+  window.addEventListener('load', function () {
+    initParticles();
+    setTimeout(runAnimations, 300);
+  });
+
+})();
