@@ -1,4 +1,8 @@
 (function () {
+  'use strict';
+
+  console.log("Vaytrion JS Loaded v3");
+
   document.documentElement.classList.remove('no-js');
 
   const API_URL = "https://script.google.com/macros/s/AKfycbzNfp7atfzwHhxM4kI0Hb4WqSXDBQtPUJeEi4bewzkPyG2GsNVV4Q08WiIjAEuOCRqu/exec";
@@ -11,7 +15,10 @@
     const btn = document.querySelector('.cta-button');
     const input = document.querySelector('.cta-input');
 
-    if (!btn || !input) return;
+    if (!btn || !input) {
+      console.log("CTA not found");
+      return;
+    }
 
     btn.addEventListener('click', async function () {
       const email = input.value.trim();
@@ -56,6 +63,7 @@
     lines.forEach((line, i) => {
       line.style.opacity = '0';
       line.style.transform = 'translateY(10px)';
+
       setTimeout(() => {
         line.style.transition = 'all 0.5s ease';
         line.style.opacity = '1';
@@ -134,10 +142,17 @@
     });
   }
 
-  window.addEventListener('load', function () {
+  function boot() {
+    console.log("Boot running...");
     initParticles();
     initCTA();
     setTimeout(runAnimations, 300);
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
 
 })();
