@@ -1,28 +1,38 @@
 .cta {
-  color: #ffffff;
-  font-size: 1rem;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: opacity 0.3s ease, filter 0.3s ease;
-  opacity: 1;
-  filter: brightness(100%);
-  /* other properties */
+  margin: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #007BFF;
+  color: white;
 }
 
-.cta:hover {
-  opacity: 0.8;
-  filter: brightness(90%);
+header {
+  background-color: #f8f9fa;
+  padding: clamp(0.25rem, 0.5vw, 0.5rem);
 }
 
-.section {
-  background-color: #f0f0f0;
+footer {
+  background-color: #343a40;
+  color: white;
+  padding: 1rem;
 }
 
-/* other styles */
+main {
+  padding: 2rem;
+}
 
-/* Fixing the clamp issue on line 147 */
-.some-class {
-  font-size: clamp(0.25rem, 0.5vw, 0.5rem);
+.cta {
+  border-radius: 0.25rem;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin: 0.5rem 0;
 }
